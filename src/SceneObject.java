@@ -18,10 +18,10 @@ public class SceneObject{
 		return surfaceColor;
 	}
 
-	public Vector3 getNormal(Vector3 p, double EPSILON){
-		double dx = DE(p.add(new Vector3(EPSILON, 0, 0))) - DE(p.add(new Vector3(-EPSILON, 0, 0)));
-		double dy = DE(p.add(new Vector3(0, EPSILON, 0))) - DE(p.add(new Vector3(0, -EPSILON, 0)));
-		double dz = DE(p.add(new Vector3(0, 0, EPSILON))) - DE(p.add(new Vector3(0, 0, -EPSILON)));
+	public Vector3 getNormal(Vector3 p){
+		double dx = DE(p.add(new Vector3(Renderer.EPSILON, 0, 0))) - DE(p.add(new Vector3(-Renderer.EPSILON, 0, 0)));
+		double dy = DE(p.add(new Vector3(0, Renderer.EPSILON, 0))) - DE(p.add(new Vector3(0, -Renderer.EPSILON, 0)));
+		double dz = DE(p.add(new Vector3(0, 0, Renderer.EPSILON))) - DE(p.add(new Vector3(0, 0, -Renderer.EPSILON)));
 		return new Vector3(dx, dy, dz).normalize();
 	}
 }
