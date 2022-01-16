@@ -4,9 +4,9 @@ public class Vector3{
 	public static final Vector3 J = new Vector3(0, 1, 0);
 	public static final Vector3 K = new Vector3(0, 0, 1);
 	
-	private double x;
-	private double y;
-	private double z;
+	public double x;
+	public double y;
+	public double z;
 	
 	public Vector3(){
 		x = 0;
@@ -24,6 +24,10 @@ public class Vector3{
 		return new Vector3(x + v.x, y + v.y, z + v.z);
 	}
 	
+	public double dot(Vector3 v){
+		return x * v.x + y * v.y + z * v.z;
+	}
+
 	@Override
 	public boolean equals(Object o){
 		if (! (o instanceof Vector3)){
@@ -39,7 +43,7 @@ public class Vector3{
 	}
 	
 	public Vector3 normalize(){
-		return new this.scale(1.0 / this.magnitude());
+		return scale(1.0 / magnitude());
 	}
 	
 	public Vector3 scale(double c){

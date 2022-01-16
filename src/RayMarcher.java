@@ -5,8 +5,8 @@ import javax.imageio.ImageIO;
 
 public class RayMarcher{
 	
-	private static final int RESX = 400;
-	private static final int RESY = 400;
+	private static final int RESX = 1920;
+	private static final int RESY = 1080;
 	
 	public static void main(String[] args){
 		Renderer r = new Renderer(RESX, RESY);
