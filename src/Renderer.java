@@ -3,10 +3,8 @@ import java.awt.image.BufferedImage;
 
 public class Renderer{
 	
-	Sphere s1 = new Sphere(new Vector3(0, 0, 0), new Color(200, 10, 10), 5);
-
 	private final double EPSILON = 0.00000001;
-	boolean warnedMaxDistance = false;
+	private boolean warnedMaxDistance = false;
 
 	private int resx;
 	private int resy;
@@ -16,38 +14,36 @@ public class Renderer{
 		this.resy = resy;
 	}
 
-	private double DE(Vector3 point){
-		return point.magnitude() - 5.0; //sphere with radius 5 at the origin
+	private Color scaleColor(Color c, double val){
+		int red = c.getRed();
+		int green = c.getGreen();
+		int blue = c.getBlue();
+		red = (int) ((double) red * val);
+		green = (int) ((double) green  * val);
+		blue = (int) ((double) blue * val);
+		return new Color(red, green, blue);
 	}
 
-	private Vector3 getGradient(Vector3 p, SceneObject s){
-		double dx = s.DE(p.add(new Vector3(EPSILON, 0, 0))) - s.DE(p.add(new Vector3(-EPSILON, 0, 0)));
-		double dy = s.DE(p.add(new Vector3(0, EPSILON, 0))) - s.DE(p.add(new Vector3(0, -EPSILON, 0)));
-		double dz = s.DE(p.add(new Vector3(0, 0, EPSILON))) - s.DE(p.add(new Vector3(0, 0, -EPSILON)));
-		return new Vector3(dx, dy, dz).normalize();
+	private Color calculateColor(Vector3 p, Vector3 norm, Color c){
+		Vector3 lightPos = new Vector3(-10, 50, 50);
+		Vector3 lightDir =p.subtract(lightPos).normalize().scale(-1);
+		double val = norm.dot(lightDir);
+		if(val < 0){
+			val = 0;
+		}
+		return scaleColor(c, val);
 	}
 
 	private Color rayMarch(Ray r){
-		Vector3 lightPos = new Vector3(-10, 50, 50);
+		Sphere s1 = new Sphere(new Vector3(0, 0, 0), new Color(200, 10, 10), 5);
 		int maxSteps = 1000;
 		int steps = 0;
 		double t = 0;
 		while(steps < maxSteps){
 			double distance = s1.DE(r.getPoint(t));
 			if(distance < EPSILON){
-				Vector3 norm = getGradient(r.getPoint(t), s1);
-				Vector3 lightDir = r.getPoint(t).subtract(lightPos).normalize().scale(-1);
-				double val = norm.dot(lightDir);
-				if(val < 0){
-					val = 0;
-				}
-				int red = s1.surfaceColor().getRed();
-				int green = s1.surfaceColor().getGreen();
-				int blue = s1.surfaceColor().getBlue();
-				red = (int) ((double) red * val);
-				green = (int) ((double) green  * val);
-				blue = (int) ((double) blue * val);
-				return new Color(red, green, blue);
+				Vector3 norm = s1.getNormal(r.getPoint(t), EPSILON);
+				return calculateColor(r.getPoint(t), norm, s1.getColor());
 			}
 			if(distance > 100){
 				return new Color(0, 0, 0);
@@ -75,5 +71,4 @@ public class Renderer{
 		}
 		return ouputImage;
 	}
-	
 }
