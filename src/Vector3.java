@@ -1,5 +1,6 @@
 public class Vector3{
 	
+	//Directional definitions
 	public static final Vector3 I = new Vector3(1, 0, 0);
 	public static final Vector3 J = new Vector3(0, 1, 0);
 	public static final Vector3 K = new Vector3(0, 0, 1);

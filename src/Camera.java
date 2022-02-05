@@ -23,7 +23,7 @@ public class Camera{
 		left = Vector3.J;
 		up = Vector3.K;
 		
-		position = new Vector3(-10, 0, 0);
+		position = new Vector3(-13, 0, 0);
 	}
 	
 	public Vector3 pixelToScreenCoord(int x, int y){
