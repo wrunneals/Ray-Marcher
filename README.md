@@ -5,5 +5,4 @@
  ![first_image](/res/Image1.png)
 
  ### A working Mandelbox DE
- "There is still a lot I can do to make these images look better, though this is a fun point to reach tbh."
  ![first_fractal](/res/Image2.png)
