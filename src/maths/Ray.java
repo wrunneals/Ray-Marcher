@@ -1,3 +1,5 @@
+package maths;
+
 public class Ray{
 	
 	private Vector3 origin;

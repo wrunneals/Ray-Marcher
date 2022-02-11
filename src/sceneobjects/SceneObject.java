@@ -1,4 +1,9 @@
+package sceneobjects;
+
 import java.awt.Color;
+
+import maths.Vector3;
+import renderer.Renderer;
 
 public class SceneObject{
 	

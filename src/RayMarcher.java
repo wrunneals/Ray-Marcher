@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import renderer.Renderer;
+
 public class RayMarcher{
 	
 	private static final int RESX = 1920;

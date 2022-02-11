@@ -1,13 +1,19 @@
 /* TODO:
 	- rayMarch and shadowMarch share the same code, break into function
+	- phong shading model (mostly to add ambient light)
 */
+
+package renderer;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+import sceneobjects.*;
+import maths.*;
+
 public class Renderer{
 	
-	public static final double EPSILON = 0.00000001;
+	public static final double EPSILON = 0.001;
 	private boolean warnedMaxDistance = false;
 
 	private int resx;
@@ -17,26 +23,38 @@ public class Renderer{
 	private Vector3 lightPos;
 	private Sphere s1;
 	private Sphere s2;
+	Mandelbox boxy;
+	SierpinskiTetrahedron st;
 	
 	public Renderer(int resx, int resy){
 		this.resx = resx;
 		this.resy = resy;
-		lightPos = new Vector3(-10, 50, 50);
+		lightPos = new Vector3(-50, 0, 100);
 		s1 = new Sphere(new Vector3(0, 0, 0), new Color(200, 10, 10), 5.0);
 		s2 = new Sphere(new Vector3(-4.5, 5, 5), new Color(10, 10, 200), 1.0);
+		boxy = new Mandelbox();
+		st = new SierpinskiTetrahedron();
 	}
 
+	// Rough structure for a scene based DE that finds the closest object (might make this it's own class later...)
 	private double sceneDE(Vector3 point){
 		// return s1.DE(point);
-		return Math.min(s1.DE(point), s2.DE(point));
+		//return Math.min(s1.DE(point), s2.DE(point));
+
+		
+		return boxy.DE(point);
 	}
 
+	// Helps get the specific object that was hit, may be move with the above function later...
 	private Hit getHitObject(Vector3 point){
+		/*
 		Sphere s = s1;
 		if(s2.DE(point) < s1.DE(point)){
 			s = s2;
 		}
 		return new Hit(point, s.getNormal(point), s.getColor());
+		*/
+		return new Hit(point, boxy.getNormal(point), boxy.getColor());
 	}
 
 	/** Scales a color by a scalar value. Scalar value should never be less that 0 or greater that 1.
@@ -79,7 +97,8 @@ public class Renderer{
 	 */
 	private Color rayMarch(Ray r){
 		
-		int maxSteps = 1000;
+		int maxSteps = 255;
+		double maxDistance = 10;
 		int steps = 0;
 		double t = 0;
 		while(steps < maxSteps){
@@ -91,7 +110,7 @@ public class Renderer{
 				double shadowVal = shadowMarch(r.getPoint(t), norm);
 				return calculateColor(h, shadowVal);
 			}
-			if(distance > 100){
+			if(distance > maxDistance){
 				// Return background color
 				// ¯\_(ツ)_/¯
 				return new Color(0, 0, 0);
@@ -106,12 +125,18 @@ public class Renderer{
 		return new Color(0, 0, 0);
 	}
 	
+
+	/** Marches a ray towards a light source to see if it's obscured. Uses the number of steps to get a idea of how obscured it was to produce soft shadows (penumbra).
+	 * @param p The point of the ray intersection.
+	 * @param norm The surface normal at the point p.
+	 * @return Function returns 0.0 if the point is obscured by some object in the distance field. Otherwise returns 1.0 scaled by the penumbra factor.
+	 */
 	private double shadowMarch(Vector3 p, Vector3 norm){
 		Vector3 lightDir = p.subtract(lightPos).normalize().scale(-1);
 		Vector3 orig = p.add(norm.scale(EPSILON * 2.0));
 		Ray r = new Ray(orig, lightDir);
-		int maxSteps = 1000;
-		double maxDistance = 1000;
+		int maxSteps = 255;
+		double maxDistance = 10;
 		int steps = 0;
 		double t = 0.0;
 

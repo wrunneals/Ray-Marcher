@@ -1,4 +1,7 @@
+package renderer;
+
 import java.awt.Color;
+import maths.Vector3;
 
 public class Hit{
 

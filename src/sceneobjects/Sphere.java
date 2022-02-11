@@ -1,4 +1,7 @@
+package sceneobjects;
+
 import java.awt.Color;
+import maths.Vector3;
 
 public class Sphere extends SceneObject{
 	

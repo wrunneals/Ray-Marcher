@@ -1,3 +1,7 @@
+package renderer;
+
+import maths.Vector3;
+
 public class Camera{
 	
 	private int resx;
@@ -23,7 +27,7 @@ public class Camera{
 		left = Vector3.J;
 		up = Vector3.K;
 		
-		position = new Vector3(-13, 0, 0);
+		position = new Vector3(-15, 0, 0);
 	}
 	
 	public Vector3 pixelToScreenCoord(int x, int y){
