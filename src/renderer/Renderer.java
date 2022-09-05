@@ -14,6 +14,8 @@ import maths.*;
 public class Renderer{
 	
 	public static final double EPSILON = 0.001;
+	public static final double screenGamma = 2.2;
+
 	private boolean warnedMaxDistance = false;
 
 	private int resx;
@@ -29,7 +31,7 @@ public class Renderer{
 	public Renderer(int resx, int resy){
 		this.resx = resx;
 		this.resy = resy;
-		lightPos = new Vector3(-50, 0, 100);
+		lightPos = new Vector3(-10, 0, 10);
 		s1 = new Sphere(new Vector3(0, 0, 0), new Color(200, 10, 10), 5.0);
 		s2 = new Sphere(new Vector3(-4.5, 5, 5), new Color(10, 10, 200), 1.0);
 		boxy = new Mandelbox();
@@ -57,6 +59,28 @@ public class Renderer{
 		return new Hit(point, boxy.getNormal(point), boxy.getColor());
 	}
 
+	private Color addColor(Color c1, Color c2){
+		double r1 = (double) c1.getRed() / 255.0;
+		double g1 = (double) c1.getGreen() / 255.0;
+		double b1 = (double) c1.getBlue() / 255.0;
+		double r2 = (double) c2.getRed() / 255.0;
+		double g2 = (double) c2.getGreen() / 255.0;
+		double b2 = (double) c2.getBlue() / 255.0;
+		double red = r1 + r2;
+		double green = g1 + g2;
+		double blue = b1 + b2;
+		if(red > 1.0){
+			red = 1.0;
+		}
+		if(green > 1.0){
+			green = 1.0;
+		}
+		if(blue > 1.0){
+			blue = 1.0;
+		}
+		return new Color((float)red, (float)green, (float)blue);
+	}
+
 	/** Scales a color by a scalar value. Scalar value should never be less that 0 or greater that 1.
 	 * @param c The base color to scale.
 	 * @param val The scalar value.
@@ -69,7 +93,39 @@ public class Renderer{
 		red = (int) ((double) red * val);
 		green = (int) ((double) green  * val);
 		blue = (int) ((double) blue * val);
+		if(red > 255){
+			red = 255;
+		}
+		if(green > 255){
+			green = 255;
+		}
+		if(blue > 255){
+			blue = 255;
+		}
 		return new Color(red, green, blue);
+	}
+
+	private Color multiplyColor(Color c1, Color c2){
+		double r1 = (double) c1.getRed() / 255.0;
+		double g1 = (double) c1.getGreen() / 255.0;
+		double b1 = (double) c1.getBlue() / 255.0;
+		double r2 = (double) c2.getRed() / 255.0;
+		double g2 = (double) c2.getGreen() / 255.0;
+		double b2 = (double) c2.getBlue() / 255.0;
+		double red = r1 * r2;
+		double green = g1 * g2;
+		double blue = b1 * b2;
+		return new Color((float)red, (float)green, (float)blue);
+	}
+
+	private Color gammaCorrection(Color c){
+		double red = (double) c.getRed() / 255.0;
+		double green = (double) c.getGreen() / 255.0;
+		double blue = (double) c.getBlue() / 255.0;
+		red = Math.pow(red, 1.0 / screenGamma);
+		green = Math.pow(green, 1.0 / screenGamma);
+		blue = Math.pow(blue, 1.0 / screenGamma);
+		return new Color((float) red, (float) green, (float) blue);
 	}
 
 	/** Calculates the color for the point. Currently this is done by just taking the dot product of the surface normal and the light direction and scaling the surface color.
@@ -79,7 +135,8 @@ public class Renderer{
 	 * @param c The surface color at the point.
 	 * @return The color of the surface point with lighting.
 	 */
-	private Color calculateColor(Hit h, double shadowVal){
+	private Color calculateColor(Hit h, double shadowVal, double ambientOcclusion){
+		/*
 		Vector3 p = h.getPoint();
 		Vector3 norm = h.getNormal();
 		Color c = h.getColor();
@@ -89,6 +146,37 @@ public class Renderer{
 			val = 0;
 		}
 		return scaleColor(c, val);
+		*/
+		//Bing-Phong Shading Model
+		Color lightColor = new Color(1f, 1f, 1f);
+		Color surfaceSpecColor = new Color(1f, 1f, 1f); // this should be apart of a surface material class later...
+		double lightPower = 40.0;
+		Vector3 norm = h.getNormal();
+		Vector3 lightDir = lightPos.subtract(h.getPoint());
+		double distance = h.getPoint().subtract(lightPos).magnitude();
+		distance *= distance;
+		lightDir = lightDir.normalize();
+		double lambertian = Math.max(lightDir.dot(norm), 0.0);
+		double shininess = 16.0;
+		double specular = 0.0;
+		if(lambertian > 0.0){
+			Vector3 veiwDir = h.getPoint().normalize();
+			Vector3 halfDir = lightDir.add(veiwDir).normalize();
+			double theta = Math.max(halfDir.dot(norm), 0.0);
+			specular = Math.pow(theta, shininess);
+		}
+		Color ambientColor = scaleColor(h.getColor(), 0.1);
+		Color diffuseColor = multiplyColor(scaleColor(h.getColor(), lambertian * 0.8), scaleColor(lightColor, lightPower / distance));
+		Color specularColor = multiplyColor(scaleColor(surfaceSpecColor, specular), scaleColor(lightColor, lightPower / distance));
+		Color linearColor = scaleColor(addColor(diffuseColor, specularColor), shadowVal);
+		linearColor = addColor(scaleColor(ambientColor, shadowVal), linearColor); 
+		//try{
+		//	linearColor = addColor(scaleColor(ambientColor, Math.pow(ambientOcclusion, 10)), linearColor);
+		//}
+		//catch(IllegalArgumentException e){
+		//	System.out.println(ambientOcclusion);
+		//}
+		return gammaCorrection(linearColor);
 	}
 
 	/** Marches a ray based on a distance function. If a colision occurs it will return the color of the surface that was hit, otherwise it will return the background color.
@@ -96,7 +184,7 @@ public class Renderer{
 	 * @return Will return the color of the surface if a surface if hit, otherwise the background color will be returned.
 	 */
 	private Color rayMarch(Ray r){
-		
+		double ambientOcclusion = 1.0;
 		int maxSteps = 255;
 		double maxDistance = 10;
 		int steps = 0;
@@ -108,7 +196,8 @@ public class Renderer{
 				Hit h = getHitObject(r.getPoint(t));
 				Vector3 norm = h.getNormal();
 				double shadowVal = shadowMarch(r.getPoint(t), norm);
-				return calculateColor(h, shadowVal);
+				double occlusion = 1.0 - (double)steps/(double)maxSteps;
+				return calculateColor(h, shadowVal, occlusion);
 			}
 			if(distance > maxDistance){
 				// Return background color

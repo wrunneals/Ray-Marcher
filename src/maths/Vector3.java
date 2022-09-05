@@ -27,6 +27,10 @@ public class Vector3{
 		return new Vector3(x + v.x, y + v.y, z + v.z);
 	}
 
+	public Vector3 multiply(Vector3 v){
+		return new Vector3(x * v.x, y * v.y, z * v.z);
+	}
+
 	public double dot(Vector3 v){
 		return x * v.x + y * v.y + z * v.z;
 	}
@@ -49,6 +53,13 @@ public class Vector3{
 		return scale(1.0 / magnitude());
 	}
 	
+
+	public static Vector3 reflect(Vector3 p, Vector3 n){
+		double scalarR = p.dot(n) * 2.0;
+		Vector3 r = p.subtract(n.scale(scalarR));
+		return r;
+	}
+
 	public Vector3 scale(double c){
 		return new Vector3(x * c, y * c, z * c);
 	}
@@ -63,13 +74,8 @@ public class Vector3{
 	}
 	
 	public static void main(String[] args){
-		Vector3 v1 = new Vector3(0, 0, 1);
-		Vector3 v2 = new Vector3(1, 0, 0);
-		Vector3 v3 = new Vector3(3.2, 3.2, 0);
-		
-		System.out.println(v1.add(v1).toString());
-		System.out.println(v2.add(v2).toString());
-		System.out.println(v3.toString());
-		System.out.println(v1.equals(v2));
+		Vector3 point = new Vector3(1, 1, 0);
+		Vector3 normal = new Vector3(1, 0, 0).normalize();
+		System.out.println(Vector3.reflect(point, normal).toString());
 	}
 }
