@@ -9,4 +9,4 @@
  ![first_fractal](/res/Image2.png)
 
  After adding in a Blinn-Phong shading model
- ![shaded](/res/bing-phong.png)
+ ![shaded](/res/blinn-phong.png)

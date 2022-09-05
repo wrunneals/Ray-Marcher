@@ -2,6 +2,7 @@
 	- super samples
 	- in direct lighting (bounces)
 	- clean and comment
+	- other fractals (mandelbulb, platonics)
 */
 
 package renderer;
@@ -100,7 +101,6 @@ public class Renderer{
 		return new Color(0, 0, 0);
 	}
 	
-
 	/** Marches a ray towards a light source to see if it's obscured. Uses the number of steps to get a idea of how obscured it was to produce soft shadows (penumbra).
 	 * @param p The point of the ray intersection.
 	 * @param norm The surface normal at the point p.
