@@ -1,15 +1,14 @@
 package renderer;
 
-import java.awt.Color;
 import maths.Vector3;
 
 public class Hit{
 
 	private Vector3 point;
 	private Vector3 normal;
-	private Color surfaceColor;
+	private Vector3 surfaceColor;
 
-	public Hit(Vector3 point, Vector3 normal, Color surfaceColor){
+	public Hit(Vector3 point, Vector3 normal, Vector3 surfaceColor){
 		this.point = point;
 		this.normal = normal;
 		this.surfaceColor = surfaceColor;
@@ -23,7 +22,7 @@ public class Hit{
 		return normal;
 	}
 
-	public Color getColor(){
+	public Vector3 getColor(){
 		return surfaceColor;
 	}
 }

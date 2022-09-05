@@ -1,12 +1,11 @@
 package sceneobjects;
 
-import java.awt.Color;
 import maths.Vector3;
 
 public class Mandelbox extends SceneObject{
 	
-	public Mandelbox(){
-		super(new Vector3(0, 0, 0), new Color(250, 10, 10));
+	public Mandelbox(Vector3 color){
+		super(new Vector3(0, 0, 0), color);
 	}
 
 	@Override

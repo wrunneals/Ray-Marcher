@@ -1,13 +1,12 @@
 package sceneobjects;
 
-import java.awt.Color;
 import maths.Vector3;
 
 public class Sphere extends SceneObject{
 	
 	private double radius;
 
-	public Sphere(Vector3 position, Color surfaceColor, double radius){
+	public Sphere(Vector3 position, Vector3 surfaceColor, double radius){
 		super(position, surfaceColor);
 		this.radius = radius;
 	}

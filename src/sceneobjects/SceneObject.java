@@ -1,16 +1,14 @@
 package sceneobjects;
 
-import java.awt.Color;
-
 import maths.Vector3;
 import renderer.Renderer;
 
 public class SceneObject{
 	
 	protected Vector3 position;
-	protected Color surfaceColor;
+	protected Vector3 surfaceColor;
 
-	public SceneObject(Vector3 position, Color surfaceColor){
+	public SceneObject(Vector3 position, Vector3 surfaceColor){
 		this.position = position;
 		this.surfaceColor = surfaceColor;
 	}
@@ -19,7 +17,7 @@ public class SceneObject{
 		return 0; //This was not meant to be used	
 	}
 
-	public Color getColor(){
+	public Vector3 getColor(){
 		return surfaceColor;
 	}
 

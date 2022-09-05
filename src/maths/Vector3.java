@@ -1,5 +1,7 @@
 package maths;
 
+import java.awt.Color;
+
 public class Vector3{
 	
 	//Directional definitions
@@ -53,6 +55,9 @@ public class Vector3{
 		return scale(1.0 / magnitude());
 	}
 	
+	public Vector3 pow(double power){
+		return new Vector3(Math.pow(x, power), Math.pow(y, power), Math.pow(z, power));
+	}
 
 	public static Vector3 reflect(Vector3 p, Vector3 n){
 		double scalarR = p.dot(n) * 2.0;
@@ -68,6 +73,13 @@ public class Vector3{
 		return new Vector3(x - v.x, y - v.y, z - v.z);
 	}
 	
+	public Color toColor(){
+		double red = Math.max(0.0, Math.min(x, 1.0));
+		double green = Math.max(0.0, Math.min(y, 1.0));
+		double blue = Math.max(0.0, Math.min(z, 1.0));
+		return new Color((float)red, (float)green, (float)blue);
+	}
+
 	@Override
 	public String toString(){
 		return "<" + x + ", " + y + ", " + z + ">";
