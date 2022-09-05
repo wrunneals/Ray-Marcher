@@ -9,4 +9,4 @@
  ![first_fractal](/res/Image2.png)
 
  "After adding in a Bing-Phong shading model"
- ![shaded](/res/Image2.png)
+ ![shaded](/res/bing-phong.png)
