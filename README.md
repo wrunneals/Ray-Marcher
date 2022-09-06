@@ -1,15 +1,20 @@
 # Ray Marcher
- "Simple" ray marcher written in Java. Working towards an engine that will be able to render fractals in 3D.
- 
- ### Earliest version
- ![first_image](/res/Image1.png)
+ A "simple" ray marcher written in Java. Working towards an engine that will be able to render fractals in 3D in high definition for ... science?
+ Notable progress:
+ - Created a working version that can render simple shapes (spheres) with shadows.
+ - Created a working DE for the Madelbox and successfully rendered a very flat looking image.
+ - Added Blinn-Phong shading for better looking images
 
- ### A working Mandelbox DE
- First Mandelbox rendering, not very exciting with no shading.
- ![first_fractal](/res/Image2.png)
+## History/Images
+### Earliest version
+![first_image](/res/Image1.png)
 
- After adding in a Blinn-Phong shading model images are starting to look much nicer.
- ![shaded](/res/blinn-phong.png)
+### A working Mandelbox DE
+First (very flat) Mandelbox rendering.
+![first_fractal](/res/Image2.png)
 
- Tetra box for fun
- ![tetra](/res/tetra.png)
+After adding in a Blinn-Phong shading model images are starting to look... shiny.
+![shaded](/res/blinn-phong.png)
+
+Fractal D&D dice is aparently a thing
+![tetra](/res/tetra.png)
