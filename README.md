@@ -1,6 +1,6 @@
 # Ray Marcher
- A "simple" ray marcher written in Java. Working towards an engine that will be able to render fractals in 3D in high definition for ... science? ¯\_(ツ)_/¯
- Notable progress:
+ A "simple" ray marcher written in Java. Working towards an engine that will be able to render fractals in 3D in high definition for ... science?
+ ##### Notable progress:
  - Created a working version that can render simple shapes (spheres) with shadows.
  - Created a working DE for the Madelbox and successfully rendered a very flat looking image.
  - Added Blinn-Phong shading for better looking images
@@ -16,5 +16,5 @@ First (very flat) Mandelbox rendering.
 After adding in a Blinn-Phong shading model images are starting to look better.
 ![shaded](/res/blinn-phong.png)
 
-Platonic dimensions - Tetrahedron (orginal post from fractal fourms)
+Tetrahedron
 ![tetra](/res/tetra.png)
